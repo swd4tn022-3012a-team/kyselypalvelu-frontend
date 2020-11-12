@@ -4,7 +4,7 @@ function App() {
   const [questionnaire, setQuestionnaire] = useState({});
   
   useEffect(() => {
-    fetch("https://kyselypalvelu-backend.herokuapp.com/questionnaires/1")
+    fetch("http://localhost:8080/questionnaires/1")
       .then((response) => response.json())
       .then((data) => setQuestionnaire(data));
   }, []);
@@ -12,13 +12,28 @@ function App() {
   if (!questionnaire.questions) return <p>loading...</p>;
 
   const onSubmit = (event) => {
-      event.preventDefault();
-      const data = new FormData(event.target);
+      event.preventDefault()
+      const data = new FormData(event.target)
       console.log(data.getAll("answer"))
-      const answers = data.getAll("answer");
-      
-
-  };
+      const answers = data.getAll("answer")
+      const answerObjects = []
+      for (let i = 0; i < answers.length; i++) {
+        const object = {
+          text: answers[i],
+          question: questionnaire.questions[i],
+        }
+        answerObjects.push(object)
+      }
+      console.log('sending to backend', JSON.stringify(answerObjects))
+      const requestOptions = {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify(answerObjects)
+      }
+      fetch('http://localhost:8080/answers/1', requestOptions).then(response => {
+        console.log(response)
+      })
+  }
   return (
     <div>
       <h1>Kyselypalvelu</h1>
