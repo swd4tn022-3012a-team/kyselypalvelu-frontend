@@ -18,9 +18,12 @@ function App() {
       const answers = data.getAll("answer")
       const answerObjects = []
       for (let i = 0; i < answers.length; i++) {
+        
         const object = {
           text: answers[i],
-          question: questionnaire.questions[i],
+          question: {
+            questionId: questionnaire.questions[i].questionId
+          },
         }
         answerObjects.push(object)
       }
