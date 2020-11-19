@@ -33,7 +33,7 @@ function App() {
         headers: {'Content-Type': 'application/json'},
         body: JSON.stringify(answerObjects)
       }
-      fetch('http://localhost:8080/answers/1', requestOptions).then(response => {
+      fetch('https://kyselypalvelu-backend.herokuapp.com/answers/1', requestOptions).then(response => {
         console.log(response)
       })
   }
