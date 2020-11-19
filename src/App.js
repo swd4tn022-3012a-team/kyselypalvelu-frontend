@@ -4,7 +4,7 @@ function App() {
   const [questionnaire, setQuestionnaire] = useState({});
   
   useEffect(() => {
-    fetch("http://localhost:8080/questionnaires/1")
+    fetch("https://kyselypalvelu-backend.herokuapp.com/questionnaires/1")
       .then((response) => response.json())
       .then((data) => setQuestionnaire(data));
   }, []);
