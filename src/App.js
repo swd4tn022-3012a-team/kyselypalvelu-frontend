@@ -1,59 +1,21 @@
-import React, { useState, useEffect } from "react";
+import React from 'react'
+import { BrowserRouter as Router, Route, Switch } from 'react-router-dom'
+import Questionnaire from './components/Questionnaire'
+import Questionnaires from './components/Questionnaires'
 
 function App() {
-  const [questionnaire, setQuestionnaire] = useState({});
-  
-  useEffect(() => {
-    fetch("https://kyselypalvelu-backend.herokuapp.com/questionnaires/1")
-      .then((response) => response.json())
-      .then((data) => setQuestionnaire(data));
-  }, []);
-
-  if (!questionnaire.questions) return <p>loading...</p>;
-
-  const onSubmit = (event) => {
-      event.preventDefault()
-      const data = new FormData(event.target)
-      console.log(data.getAll("answer"))
-      const answers = data.getAll("answer")
-      const answerObjects = []
-      for (let i = 0; i < answers.length; i++) {
-        
-        const object = {
-          text: answers[i],
-          question: {
-            questionId: questionnaire.questions[i].questionId
-          },
-        }
-        answerObjects.push(object)
-      }
-      console.log('sending to backend', JSON.stringify(answerObjects))
-      const requestOptions = {
-        method: 'POST',
-        headers: {'Content-Type': 'application/json'},
-        body: JSON.stringify(answerObjects)
-      }
-      fetch('https://kyselypalvelu-backend.herokuapp.com/answers/1', requestOptions).then(response => {
-        console.log(response)
-      })
-  }
   return (
-    <div>
-      <h1>Kyselypalvelu</h1>
-      <h2>{questionnaire.title}</h2>
-      <p>{questionnaire.description}</p>
-
-      <form onSubmit={onSubmit}>
-        {questionnaire.questions.map((question) => (
-          <div key={question.questionId}>
-            <p>{question.questionText}</p>
-            <input type="text" name="answer" />
-          </div>
-        ))} 
-        <input type="submit" value="Lähetä"/>
-      </form>
-    </div>
-  );
+    <Router>
+      <Switch>
+        <Route path="/questionnaires/:id">
+          <Questionnaire />
+        </Route>
+        <Route path="/">
+          <Questionnaires />
+        </Route>
+      </Switch>
+    </Router>
+  )
 }
 
-export default App;
+export default App
