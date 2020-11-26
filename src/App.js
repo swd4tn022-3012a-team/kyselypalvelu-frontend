@@ -4,7 +4,7 @@ function App() {
   const [questionnaire, setQuestionnaire] = useState({});
   
   useEffect(() => {
-    fetch("http://localhost:8080/questionnaires/1")
+    fetch("https://kyselypalvelu-backend.herokuapp.com/questionnaires/1")
       .then((response) => response.json())
       .then((data) => setQuestionnaire(data));
   }, []);
@@ -33,7 +33,7 @@ function App() {
         headers: {'Content-Type': 'application/json'},
         body: JSON.stringify(answerObjects)
       }
-      fetch('http://localhost:8080/answers/1', requestOptions).then(response => {
+      fetch('https://kyselypalvelu-backend.herokuapp.com/answers/1', requestOptions).then(response => {
         console.log(response)
       })
   }
