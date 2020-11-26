@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom'
 const Questionnaires = () => {
   const [questionnaires, setQuestionnaires] = useState([])
 
-  const url = 'https://kyselypalvelu-backend.herokuapp.com//questionnaires'
+  const url = 'https://kyselypalvelu-backend.herokuapp.com/questionnaires'
 
   useEffect(() => {
     fetch(url)
