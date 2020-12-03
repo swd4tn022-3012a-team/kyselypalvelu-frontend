@@ -17,7 +17,6 @@ function Answers({ match }) {
       `https://kyselypalvelu-backend.herokuapp.com/questionnaires/${match.params.id}`
     );
     const json = await response.json();
-    console.log(json.questions);
     setQuestions(json.questions);
   };
 
