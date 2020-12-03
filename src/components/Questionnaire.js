@@ -22,7 +22,7 @@ const Questionnaire = () => {
   const onSubmit = (event) => {
     event.preventDefault()
     const data = new FormData(event.target)
-    console.log(data.getAll('answer'))
+    //console.log(data.getAll('answer'))
     //const answers = data.getAll('answer')
     const answerObjects = []
     for (let i = 0; i < questionnaire.questions.length; i++) {

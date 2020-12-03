@@ -1,36 +1,57 @@
-import React, {useEffect, useState} from "react"
-import { Link } from 'react-router-dom'
-
+import React, { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 
 function Answers({ match }) {
+  const [answers, setAnswers] = useState([]);
+  const [questions, setQuestions] = useState([]);
 
-    const [answers, setAnswers] = useState([])
+  const fetchAnswers = async () => {
+    const response = await fetch(
+      `https://kyselypalvelu-backend.herokuapp.com/answers/${match.params.id}`
+    );
+    const json = await response.json();
+    setAnswers(json);
+  };
+  const fetchQuestions = async () => {
+    const response = await fetch(
+      `https://kyselypalvelu-backend.herokuapp.com/questionnaires/${match.params.id}`
+    );
+    const json = await response.json();
+    console.log(json.questions);
+    setQuestions(json.questions);
+  };
 
-    useEffect(()=> {
-        fetch(`https://kyselypalvelu-backend.herokuapp.com/answers/${match.params.id}`)
-      .then((response) => response.json())
-      .then((data) => setAnswers(data))
-      .catch((err) => console.log(err));
-  }, [])
+  useEffect(() => {
+    fetchQuestions();
+    fetchAnswers();
+  }, [match.params.id]); // eslint-disable-line
 
-  console.log(match)
-
-  if (answers.length === 0) return <p>Vastaus puuttuu <Link to="/">Takaisin</Link></p>
+  if (answers.length === 0)
+    return (
+      <p>
+        Vastaus puuttuu <Link to="/">Takaisin</Link>
+      </p>
+    );
 
   return (
+    <div>
+      <Link to="/">Takaisin</Link>
 
-      <div>
-          <Link to="/">Takaisin</Link>
-
-          <ul>
-              {answers.map((answers, index)=>{
-              return <li key={index}>
-                  <h2>{answers.question.questionText}</h2>
-                  <p> {answers.text}</p>
-                  </li>
-              })}
-          </ul>
-      </div>
-  )
+      <ul>
+        {questions.map((q, index) => {
+          return (
+            <div key={index}>
+              <h2>{q.questionText}</h2>
+              {answers
+                .filter((a) => a.question.questionId === q.questionId)
+                .map((a, index) => (
+                  <div key={index}>{a.text}</div>
+                ))}
+            </div>
+          );
+        })}
+      </ul>
+    </div>
+  );
 }
 export default Answers;
