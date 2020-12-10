@@ -9,7 +9,6 @@ const Statistics = ({ id, question }) => {
       `https://kyselypalvelu-backend.herokuapp.com/answerstatistics/${questionId}`
     );
     const json = await response.json();
-    console.log(json);
     setStatistics(json);
   };
 
