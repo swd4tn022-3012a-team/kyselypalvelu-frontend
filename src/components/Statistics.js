@@ -49,6 +49,7 @@ const Statistics = ({ id, question }) => {
         data={parseData()}
         options={{
           title: question,
+          is3D: true
         }}
         rootProps={{ "data-testid": "1" }}
       />
