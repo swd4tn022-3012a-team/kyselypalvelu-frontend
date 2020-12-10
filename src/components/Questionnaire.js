@@ -8,7 +8,7 @@ const Questionnaire = () => {
   const [open, setOpen] = useState(false)
   const [msg, setMsg] = useState('')
 
-  const questionnaireId = useParams().id
+  const questionnaireId = useParams().id;
 
 
   const history = useHistory();
@@ -30,40 +30,37 @@ const Questionnaire = () => {
   
 
   useEffect(() => {
-    fetch(
-      `https://kyselypalvelu-backend.herokuapp.com/questionnaires/${questionnaireId}`
-    )
-      .then((response) => response.json())
-      .then((data) => {
-        //console.log(data)
-        setQuestionnaire(data)
-      })
-  }, [questionnaireId])
+    const fetchQuestionnaire = async () => {
+      const response = await fetch(
+        `https://kyselypalvelu-backend.herokuapp.com/questionnaires/${questionnaireId}`
+      );
+      const json = await response.json();
+      setQuestionnaire(json);
+    };
+    fetchQuestionnaire();
+  }, [questionnaireId]);
 
-  if (!questionnaire.questions) return <p>loading...</p>
+  if (!questionnaire.questions) return <p>loading...</p>;
 
-  const onSubmit = (event) => {
-    event.preventDefault()
-    const data = new FormData(event.target)
-    console.log(data.getAll('answer'))
-    //const answers = data.getAll('answer')
-    const answerObjects = []
+  const onSubmit = async (event) => {
+    event.preventDefault();
+    const data = new FormData(event.target);
+    const answerObjects = [];
     for (let i = 0; i < questionnaire.questions.length; i++) {
-      const answers = data.getAll(questionnaire.questions[i].questionText)
-      for(const answer of answers) {
+      const answers = data.getAll(questionnaire.questions[i].questionText);
+      for (const answer of answers) {
         const object = {
           text: answer,
           question: {
             questionId: questionnaire.questions[i].questionId,
           },
-        }
-        answerObjects.push(object)
+        };
+        answerObjects.push(object);
       }
     }
-    console.log('sending to backend', JSON.stringify(answerObjects))
     const requestOptions = {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
       body: JSON.stringify(answerObjects),
     }
 
@@ -89,8 +86,8 @@ const Questionnaire = () => {
       <form onSubmit={onSubmit}>
         {questionnaire.questions.map((question) => {
           if (
-            question.type.name === 'radio' ||
-            question.type.name === 'checkbox'
+            question.type.name === "radio" ||
+            question.type.name === "checkbox"
           ) {
             return (
               <div key={question.questionId}>
@@ -107,7 +104,7 @@ const Questionnaire = () => {
                   </div>
                 ))}
               </div>
-            )
+            );
           }
 
           return (
@@ -115,7 +112,7 @@ const Questionnaire = () => {
               <p>{question.questionText}</p>
               <input type="text" name={question.questionText} />
             </div>
-          )
+          );
         })}
 
         <input type="submit" value="Lähetä" />
@@ -128,7 +125,7 @@ const Questionnaire = () => {
                 action={snackbarAction}
                 />
     </div>
-  )
-}
+  );
+};
 
-export default Questionnaire
+export default Questionnaire;
