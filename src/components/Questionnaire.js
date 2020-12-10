@@ -1,10 +1,33 @@
 import React, { useState, useEffect } from 'react'
-import { useParams, Link } from 'react-router-dom'
+import { useParams, Link, useHistory } from 'react-router-dom'
+import Snackbar from '@material-ui/core/Snackbar'
+import { Button } from '@material-ui/core'
 
 const Questionnaire = () => {
   const [questionnaire, setQuestionnaire] = useState({})
+  const [open, setOpen] = useState(false)
+  const [msg, setMsg] = useState('')
 
   const questionnaireId = useParams().id
+
+
+  const history = useHistory();
+  
+  const handleUrl = () => {
+    history.push("/")
+  }
+
+  const snackbarAction = (
+    <Button color='secondary' size='small' onClick={handleUrl}>
+      palaa takaisin
+    </Button>
+  )
+
+    const closeSnackbar = () => {
+    setOpen(false);
+  }
+
+  
 
   useEffect(() => {
     fetch(
@@ -43,12 +66,18 @@ const Questionnaire = () => {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(answerObjects),
     }
+
     fetch(
       `https://kyselypalvelu-backend.herokuapp.com/answers/${questionnaireId}`,
       requestOptions
-    ).then((response) => {
+    )
+    .then(_ => setMsg('Kiitos vastauksestasi!'))
+    .then(_ => setOpen(true))
+    .then((response) => {
       console.log(response)
     })
+
+
   }
   return (
     <div>
@@ -88,8 +117,16 @@ const Questionnaire = () => {
             </div>
           )
         })}
+
         <input type="submit" value="Lähetä" />
       </form>
+            <Snackbar
+                open={open}
+                autoHideDuration={3000}
+                onClose={closeSnackbar}
+                message={msg}
+                action={snackbarAction}
+                />
     </div>
   )
 }
