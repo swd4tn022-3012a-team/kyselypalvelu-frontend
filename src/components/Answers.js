@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 
+import Statistics from "./Statistics";
+
 function Answers({ match }) {
   const [answers, setAnswers] = useState([]);
   const [questions, setQuestions] = useState([]);
@@ -38,16 +40,29 @@ function Answers({ match }) {
 
       <ul>
         {questions.map((q, index) => {
-          return (
-            <div key={index}>
-              <h2>{q.questionText}</h2>
-              {answers
-                .filter((a) => a.question.questionId === q.questionId)
-                .map((a, index) => (
-                  <div key={index}>{a.text}</div>
-                ))}
-            </div>
-          );
+          if (q.type.name === "radio" || q.type.name === "checkbox") {
+            return (
+              <div key={index}>
+                <h2>
+                  {q.questionText} {`(${q.type.name})`}
+                </h2>
+                <Statistics id={q.questionId} question={q.questionText} />
+              </div>
+            );
+          } else {
+            return (
+              <div key={index}>
+                <h2>
+                  {q.questionText} {`(${q.type.name})`}
+                </h2>
+                {answers
+                  .filter((a) => a.question.questionId === q.questionId)
+                  .map((a, index) => {
+                    return <div key={index}>{a.text}</div>;
+                  })}
+              </div>
+            );
+          }
         })}
       </ul>
     </div>

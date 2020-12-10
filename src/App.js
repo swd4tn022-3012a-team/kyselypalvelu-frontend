@@ -8,10 +8,10 @@ import './App.css'
 function App() {
   return (
     <Router>
-      <Switch>
+      <Switch>  
+        <Route path="/answers/:id" component={Answers} />
         <Route path="/questionnaires/:id" component={Questionnaire} />
         <Route path="/" exact component={Questionnaires} />
-        <Route path="/answers/:id" component={Answers} />
       </Switch>
     </Router>
   )
