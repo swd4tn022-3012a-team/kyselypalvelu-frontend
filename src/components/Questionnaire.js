@@ -28,7 +28,6 @@ const Questionnaire = () => {
   }
 
   
-
   useEffect(() => {
     const fetchQuestionnaire = async () => {
       const response = await fetch(
@@ -95,13 +94,11 @@ const Questionnaire = () => {
                 {question.options.values.map((value) => (
                   <div key={value}>
                     <label htmlFor={value}>{value}</label>
-                    <textarea
+                    <input
                       type={question.type.name}
                       id={value}
                       name={question.questionText}
                       value={value}
-                      rows="3" 
-                      cols="50"
                     />
                   </div>
                 ))}
@@ -112,7 +109,7 @@ const Questionnaire = () => {
           return (
             <div key={question.questionId}>
               <p>{question.questionText}</p>
-              <input type="text" name={question.questionText} />
+              <textarea type="text" name={question.questionText} rows="2" cols="50"  />
             </div>
           );
         })}
