@@ -95,11 +95,13 @@ const Questionnaire = () => {
                 {question.options.values.map((value) => (
                   <div key={value}>
                     <label htmlFor={value}>{value}</label>
-                    <input
+                    <textarea
                       type={question.type.name}
                       id={value}
                       name={question.questionText}
                       value={value}
+                      rows="3" 
+                      cols="50"
                     />
                   </div>
                 ))}
