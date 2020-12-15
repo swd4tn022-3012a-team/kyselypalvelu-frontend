@@ -1,33 +1,61 @@
-import React, { useState, useEffect } from 'react'
-import { useParams, Link, useHistory } from 'react-router-dom'
-import Snackbar from '@material-ui/core/Snackbar'
-import { Button } from '@material-ui/core'
+import React, { useState, useEffect } from "react";
+import { useParams, Link, useHistory } from "react-router-dom";
+import {
+  Button,
+  Snackbar,
+  TextField,
+  Typography,
+  Radio,
+  RadioGroup,
+  FormControlLabel,
+  Checkbox as MuiCheckBox,
+} from "@material-ui/core";
+
+const CheckBox = ({ value, name }) => {
+  const [checked, setChecked] = useState(false);
+
+  const handleChange = () => {
+    setChecked(!checked);
+  };
+
+  return (
+    <FormControlLabel
+      control={
+        <MuiCheckBox
+          checked={checked}
+          onChange={handleChange}
+          name={name}
+          value={value}
+        />
+      }
+      label={value}
+    ></FormControlLabel>
+  );
+};
 
 const Questionnaire = () => {
-  const [questionnaire, setQuestionnaire] = useState({})
-  const [open, setOpen] = useState(false)
-  const [msg, setMsg] = useState('')
+  const [questionnaire, setQuestionnaire] = useState({});
+  const [open, setOpen] = useState(false);
+  const [msg, setMsg] = useState("");
 
   const questionnaireId = useParams().id;
 
-
   const history = useHistory();
-  
+
   const handleUrl = () => {
-    history.push("/")
-  }
+    history.push("/");
+  };
 
   const snackbarAction = (
-    <Button color='secondary' size='small' onClick={handleUrl}>
+    <Button color="secondary" size="small" onClick={handleUrl}>
       palaa takaisin
     </Button>
-  )
+  );
 
-    const closeSnackbar = () => {
+  const closeSnackbar = () => {
     setOpen(false);
-  }
+  };
 
-  
   useEffect(() => {
     const fetchQuestionnaire = async () => {
       const response = await fetch(
@@ -61,20 +89,18 @@ const Questionnaire = () => {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(answerObjects),
-    }
+    };
 
     fetch(
       `https://kyselypalvelu-backend.herokuapp.com/answers/${questionnaireId}`,
       requestOptions
     )
-    .then(_ => setMsg('Kiitos vastauksestasi!'))
-    .then(_ => setOpen(true))
-    .then((response) => {
-      console.log(response)
-    })
-
-
-  }
+      .then((_) => setMsg("Kiitos vastauksestasi!"))
+      .then((_) => setOpen(true))
+      .then((response) => {
+        console.log(response);
+      });
+  };
   return (
     <div>
       <Link to="/">Takaisin</Link>
@@ -88,41 +114,70 @@ const Questionnaire = () => {
             question.type.name === "radio" ||
             question.type.name === "checkbox"
           ) {
-            return (
-              <div key={question.questionId}>
-                <p>{question.questionText}</p>
-                {question.options.values.map((value) => (
-                  <div key={value}>
-                    <label htmlFor={value}>{value}</label>
-                    <input
-                      type={question.type.name}
-                      id={value}
+            if (question.type.name === "radio") {
+              return (
+                <div key={question.questionId}>
+                  <Typography>{question.questionText}</Typography>
+                  <RadioGroup
+                    style={{
+                      display: "flex",
+                      flexDirection: "row",
+                      justifyContent: "center",
+                    }}
+                  >
+                    {question.options.values.map((value) => (
+                      <FormControlLabel
+                        key={value}
+                        name={question.questionText}
+                        value={value}
+                        control={<Radio />}
+                        label={value}
+                      />
+                    ))}
+                  </RadioGroup>
+                </div>
+              );
+            } else {
+              return (
+                <div key={question.questionId}>
+                  <Typography>{question.questionText}</Typography>
+                  {question.options.values.map((value) => (
+                    <CheckBox
+                      key={value}
                       name={question.questionText}
                       value={value}
                     />
-                  </div>
-                ))}
-              </div>
-            );
+                  ))}
+                </div>
+              );
+            }
           }
 
           return (
             <div key={question.questionId}>
-              <p>{question.questionText}</p>
-              <textarea type="text" name={question.questionText} rows="2" cols="50"  />
+              <Typography>{question.questionText}</Typography>
+              <TextField
+                variant={"filled"}
+                style={{ minWidth: 400, margin: "10px 0" }}
+                multiline
+                type="text"
+                name={question.questionText}
+              />
             </div>
           );
         })}
 
-        <input type="submit" value="Lähetä" />
+        <Button variant="contained" type="submit">
+          Lähetä
+        </Button>
       </form>
-            <Snackbar
-                open={open}
-                autoHideDuration={3000}
-                onClose={closeSnackbar}
-                message={msg}
-                action={snackbarAction}
-                />
+      <Snackbar
+        open={open}
+        autoHideDuration={3000}
+        onClose={closeSnackbar}
+        message={msg}
+        action={snackbarAction}
+      />
     </div>
   );
 };
