@@ -47,7 +47,6 @@ const Statistics = ({ id, question }) => {
         loader={<div>Loading Chart</div>}
         data={parseData()}
         options={{
-          title: question,
           is3D: true
         }}
         rootProps={{ "data-testid": "1" }}
