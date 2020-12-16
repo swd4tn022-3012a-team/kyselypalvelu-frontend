@@ -29,7 +29,7 @@ function Answers({ match }) {
 
   if (answers.length === 0)
     return (
-      <p>
+      <p style={{margin:"80px"}}>
         Vastaus puuttuu <Link to="/">Takaisin</Link>
       </p>
     );
